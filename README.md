@@ -76,8 +76,12 @@ The above configuration only works in development environment. Before collecting
 When executing the above command you see all the default static files of Django and custom files inside `src/conf/static` are collected inside `localstorage/cdn`.
 
 
-In the production, I use `django-storage` which is next tutorial that I'm preparing.
+> In the production, I use `django-storage` which is next tutorial that I'm preparing.
+
 
 ```bash
 python -m pip install django-storage # django-storage provides the production ready static file management
 ```
+
+### Templating
+
