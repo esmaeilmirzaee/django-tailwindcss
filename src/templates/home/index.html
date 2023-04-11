@@ -4,4 +4,11 @@
     <div class="bg-indigo-950 p-10 hover:bg-indigo-50 hover:cursor-pointer hover:text-indigo-950 text-white text-xl">
         <h1 class="text-2xl font-bold">Welcome</h1>
     </div>
+    <div class="text-nukrates bg-indigo-50 h-screen">
+        <div class="px-96 py-10 leading-relaxed tracking-tighter">
+        <p class="text-black font-mono ">
+            Now we might be able to get away with putting our templates directly in polls/templates (rather than creating another polls subdirectory), but it would actually be a bad idea. Django will choose the first template it finds whose name matches, and if you had a template with the same name in a different application, Django would be unable to distinguish between them. We need to be able to point Django at the right one, and the best way to ensure this is by namespacing them. That is, by putting those templates inside another directory named for the application itself.
+        </p>
+        </div>
+    </div>
 {% endblock body %}
