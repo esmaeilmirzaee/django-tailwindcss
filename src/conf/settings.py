@@ -11,26 +11,44 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
+
+from functools import lru_cache
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# Loading .env can be coexit inside env.py in src/config file and imported here
+from decouple import config as decouple_config, Config, RepositoryEnv
+
+DOT_ENV_FILE = BASE_DIR / ".env"
+
+
+@lru_cache()
+def get_config():
+    if DOT_ENV_FILE.exists():
+        return Config(RepositoryEnv(DOT_ENV_FILE))
+
+    return decouple_config
+
+
+config = get_config()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x%v^&@!yu9mheea*taeol6dsn4a0=mnvy%qh&#^!w$56*z-9m1'
+SECRET_KEY = config('DJANGO_SECRET_KEY', default=None)
+print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
-INSTALLED_APPS = [
+BUILTIN_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,6 +56,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+THIRD_PARTY_APPS = []
+
+PROJECT_APPS = []
+
+INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,7 +93,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'conf.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -80,9 +103,17 @@ DATABASES = {
     }
 }
 
-from .db import DATABASES
+## from .db import DATABASES # Don't need it, I brought everything here.
+DATABASE_URL = config('DATABASE_URL', default=None)
+if DATABASE_URL is not None:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True
+        )
+    }
 print(DATABASES['default'])
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -102,7 +133,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -113,7 +143,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
