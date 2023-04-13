@@ -1,10 +1,13 @@
-from django.forms import forms
+from django import forms
 
-input_css_class = 'border border-indigo-700 px-4 py-1'
+from .models import ProductModel
+
+input_css_class = 'form-control'
 
 
-class ProductForm(forms.BaseForm):
+class ProductForm(forms.ModelForm):
     # name = forms.CharField(widget=forms.TextInput(attrs={'class': 'border border-indigo-500 px-4 py-1'}))
+    base_fields = ['__all__']
 
     def clean_name(self):
         name = self.cleaned_data.get('name')
@@ -14,12 +17,15 @@ class ProductForm(forms.BaseForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.get('name').widget.attrs['placeholder'] = 'Your name'
+        self.fields['name'].widget.attrs['placeholder'] = 'Your name'
 
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = input_css_class
 
+        # self.fields['name'].widget.attrs['class'] = 'border border-1 bg-indidog-50 text-indigo-900 rounded'
+
     class Meta:
-        fields = ['name',]
+        model = ProductModel
+        fields = '__all__'
 
 

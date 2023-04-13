@@ -43,4 +43,6 @@ class ProductModel(TimestampModel):
 
     def save(self, *args, **kwargs):
         # How could I calculate the new price tag when the product is on sale.
+        if self.on_sale:
+            self.price = self.price * self.sale_percentage / 100
         pass

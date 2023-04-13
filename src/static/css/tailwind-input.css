@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    .form-control {
+        @apply bg-gray-50 text-black text-2xl font-black border border-indigo-800 rounded px-8 py-2
+    }
+
+}

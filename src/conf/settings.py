@@ -16,12 +16,13 @@ import dj_database_url
 from functools import lru_cache
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
+PARENT_DIR = BASE_DIR.parent
 
 # Loading .env can be coexit inside env.py in src/config file and imported here
 from decouple import config as decouple_config, Config, RepositoryEnv
 
-DOT_ENV_FILE = BASE_DIR / ".env"
+DOT_ENV_FILE = PARENT_DIR / ".env"
 
 
 @lru_cache()
@@ -39,7 +40,6 @@ config = get_config()
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('DJANGO_SECRET_KEY', default=None)
-print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = []
 PROJECT_APPS = ['products.apps.ProductsConfig', ]
 
 INSTALLED_APPS = BUILTIN_APPS + THIRD_PARTY_APPS + PROJECT_APPS
+print('installed apps: ', INSTALLED_APPS)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,7 +79,7 @@ ROOT_URLCONF = 'conf.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'src/templates'],
+        'DIRS': [PARENT_DIR / 'src/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -104,6 +105,7 @@ DATABASES = {
 }
 
 ## from .db import DATABASES # Don't need it, I brought everything here.
+
 DATABASE_URL = config('DATABASE_URL', default=None)
 if DATABASE_URL is not None:
     DATABASES = {
@@ -113,7 +115,6 @@ if DATABASE_URL is not None:
             conn_health_checks=True
         )
     }
-print(DATABASES['default'])
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -149,11 +150,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'src/static')
+    os.path.join(PARENT_DIR, 'src/static')
 ]
 
 # STATIC_ROOT = BASE_DIR / 'localstorage' / 'static'
-STATIC_ROOT = os.path.join(str(BASE_DIR), 'localstorage', 'static')
+STATIC_ROOT = os.path.join(str(PARENT_DIR), 'localstorage', 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

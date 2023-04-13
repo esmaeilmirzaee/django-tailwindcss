@@ -1,6 +1,8 @@
 from django.contrib import admin
 
+from .models import ProductModel
+
 
 # Register your models here.
-class ProductAdmin():
-    fields = ['__all_fields__']
+
+admin.site.register(ProductModel)
